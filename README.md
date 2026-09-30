@@ -18,7 +18,7 @@ A small command-line app for logging your expenses and listing them later. Entri
 ## Setup
 
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/dem000na/expense-tracker.git>
 cd ExpenseTracker
 ```
 
