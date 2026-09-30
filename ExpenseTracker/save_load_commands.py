@@ -1,6 +1,7 @@
 import json
 from pathlib import Path
 from models import Entry
+from typing import Any
 
 DATA_FILE: Path = Path(__file__).resolve().parent.parent / 'data' / 'entries.json'
 
@@ -22,10 +23,10 @@ def load_data() -> list | list[Entry]:
 
     try:
         with open(DATA_FILE, 'r', encoding='utf-8') as file:
-            data: list[dict] = json.load(file)
+            raw_data: list[dict[str, Any]] = json.load(file)
 
-            data: list[Entry] = [Entry.from_dict(entry) for entry in data]
-            return data
+            entries: list[Entry] = [Entry.from_dict(entry) for entry in raw_data]
+            return entries
 
     except json.JSONDecodeError:
         print(f"Warning: {DATA_FILE} is not valid JSON. Starting empty.")
