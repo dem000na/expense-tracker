@@ -2,12 +2,12 @@ from models import Entry
 from save_load_commands import save_data, load_data
 
 
-def add_item(entry) -> None:
+def add_item(entry: Entry) -> None:
     entries: list | list[Entry] = load_data()
     entries.append(entry)
     save_data(entries)
 
-def show_list(category):
+def show_list(category: str) -> None:
     entries: list | list[Entry] = load_data()
 
     if not entries:

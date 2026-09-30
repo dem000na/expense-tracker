@@ -1,5 +1,6 @@
 from dataclasses import dataclass, asdict, field
 import datetime
+from typing import Self
 
 @dataclass
 class Entry:
@@ -8,13 +9,13 @@ class Entry:
     note: str
     date: datetime.date = field(default_factory=datetime.date.today)
 
-    def to_dict(self):
-        data = asdict(self)
+    def to_dict(self) -> dict[str]:
+        data: dict[str, float, datetime.date] = asdict(self)
         data['date'] = self.date.isoformat()
         return data
 
     @classmethod
-    def from_dict(cls, data):
+    def from_dict(cls, data: list | list[dict[str, float]]) -> Self:
         return cls(
             amount=data['amount'],
             category=data['category'],
@@ -22,5 +23,5 @@ class Entry:
             date=datetime.date.fromisoformat(data['date'])
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.date} €{self.amount:.2f} {self.category} {self.note if self.note != '' else ''}'

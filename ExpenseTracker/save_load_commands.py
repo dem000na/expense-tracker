@@ -2,14 +2,14 @@ import json
 from pathlib import Path
 from models import Entry
 
-DATA_FILE = Path(__file__).resolve().parent.parent / 'data' / 'entries.json'
+DATA_FILE: Path = Path(__file__).resolve().parent.parent / 'data' / 'entries.json'
 
-def save_data(entries):
+def save_data(entries: list | list[Entry]):
     try:
         DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
 
         with open(DATA_FILE, 'w', encoding='utf-8') as file:
-            data = [entry.to_dict() for entry in entries]
+            data: list[dict[str, float]] = [entry.to_dict() for entry in entries]
             json.dump(data, file, indent=4, ensure_ascii=False)
 
     except OSError as e:
