@@ -16,5 +16,5 @@ def show_list(category: str) -> None:
     if category:
         entries = [entry for entry in entries if entry.category.lower() == category.lower()]
 
-    for e in sorted(entries, key=lambda entry: entry.date, reverse=True):
+    for e in reversed(entries):
         print(e)
