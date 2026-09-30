@@ -24,7 +24,6 @@ def load_data() -> list | list[Entry]:
     try:
         with open(DATA_FILE, 'r', encoding='utf-8') as file:
             raw_data: list[dict[str, Any]] = json.load(file)
-
             entries: list[Entry] = [Entry.from_dict(entry) for entry in raw_data]
             return entries
 
