@@ -1,4 +1,6 @@
 import json
+import os
+import tempfile
 from pathlib import Path
 from models import Entry
 from typing import Any
@@ -6,14 +8,25 @@ from typing import Any
 DATA_FILE: Path = Path(__file__).resolve().parent.parent / 'data' / 'entries.json'
 
 def save_data(entries: list | list[Entry]):
+    tmp_path: Path | None = None
+
     try:
         DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(DATA_FILE, 'w', encoding='utf-8') as file:
-            data: list[dict[str, float]] = [entry.to_dict() for entry in entries]
+        data: list[dict[str, float]] = [entry.to_dict() for entry in entries]
+
+        fd, tmp_name = tempfile.mkstemp(dir=DATA_FILE.parent, suffix='.tmp')
+        tmp_path = Path(tmp_name)
+
+        with os.fdopen(fd, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
 
-    except OSError as e:
+        os.replace(tmp_path, DATA_FILE)
+
+    except (OSError, TypeError, ValueError) as e:
+        if tmp_path is not None:
+            tmp_path.unlink(missing_ok=True)
+            
         print(f"Failed to save entries: {e}")
 
 
