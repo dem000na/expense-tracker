@@ -9,8 +9,8 @@ class Entry:
     note: str
     date: datetime.date = field(default_factory=datetime.date.today)
 
-    def to_dict(self) -> dict[str]:
-        data: dict[str, float, datetime.date] = asdict(self)
+    def to_dict(self) -> dict[float, str]:
+        data: dict[float, str] = asdict(self)
         data['date'] = self.date.isoformat()
         return data
 
