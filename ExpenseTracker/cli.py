@@ -1,6 +1,7 @@
 import argparse
 from models import Entry
-from cli_commands import add_item, show_list
+from cli_commands import add_item, show_list, show_month_report
+import datetime
 
 def main():
     parse = argparse.ArgumentParser(prog="ExpenseTracker")
@@ -13,7 +14,10 @@ def main():
 
     list_parser: argparse.ArgumentParser = subparsers.add_parser("list",)
     list_parser.add_argument('-c', '--category', nargs='+', help="list items in a specific category")
+    list_parser.add_argument('-d', '--date', type=datetime.date.fromisoformat, help='only show entries in this format YYYY-MM-DD')
 
+    report_parser: argparse.ArgumentParser = subparsers.add_parser("report")
+    report_parser.add_argument('-m', '--month', type=lambda m: datetime.datetime.strptime(m, '%Y-%m').date(), help='only show entries in this format YYYY-MM')
 
     args: argparse.Namespace = parse.parse_args()
 
@@ -35,9 +39,14 @@ def main():
         else:
             args.category = ''
 
-        show_list(args.category)
+        show_list(args.category, args.date)
 
-        
+
+    elif args.command == 'report':
+        if not args.month:
+            args.month = None
+            
+        show_month_report(args.month)
 
 if __name__ == '__main__':
     main()

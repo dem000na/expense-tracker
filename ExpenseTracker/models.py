@@ -24,4 +24,4 @@ class Entry:
         )
 
     def __str__(self) -> str:
-        return f'Added: {self.date} €{self.amount:.2f} {self.category} {self.note if self.note != '' else ''}'
+        return f'{self.date} €{self.amount:.2f} {self.category} {self.note if self.note != '' else ''}'
