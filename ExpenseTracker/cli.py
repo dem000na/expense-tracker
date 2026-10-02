@@ -1,9 +1,19 @@
 import argparse
+import datetime
+import logging
+from pathlib import Path
 from models import Entry
 from cli_commands import add_item, show_list, show_month_report
-import datetime
+
+LOG_DIR: Path = Path(__file__).resolve().parent.parent / 'logging' / 'logs.log'
 
 def main():
+    LOG_DIR.parent.mkdir(parents=True, exist_ok=True)
+    logging.basicConfig(level=logging.DEBUG, filename=LOG_DIR, filemode='w',
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger('cli')
+
+
     parse = argparse.ArgumentParser(prog="ExpenseTracker")
     subparsers = parse.add_subparsers(dest="command")
 
@@ -20,6 +30,7 @@ def main():
     report_parser.add_argument('-m', '--month', type=lambda m: datetime.datetime.strptime(m, '%Y-%m').date(), help='only show entries in this format YYYY-MM')
 
     args: argparse.Namespace = parse.parse_args()
+    logger.info('Running command %s with args %s', args.command, args)
 
     if args.command == 'add':
         args.category = ' '.join(args.category)

@@ -8,11 +8,8 @@ from typing import Any
 
 
 DATA_FILE: Path = Path(__file__).resolve().parent.parent / 'data' / 'entries.json'
-LOG_DIR: Path = Path(__file__).resolve().parent.parent / 'logging' / 'logs.log'
 
-
-logging.basicConfig(level=logging.DEBUG, filename=LOG_DIR, filemode='w',
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 
 def save_data(entries: list | list[Entry]):
@@ -20,7 +17,6 @@ def save_data(entries: list | list[Entry]):
 
     try:
         DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
-        LOG_DIR.parent.mkdir(parents=True, exist_ok=True)
 
         data: list[dict[str, float]] = [entry.to_dict() for entry in entries]
 
@@ -31,30 +27,30 @@ def save_data(entries: list | list[Entry]):
             json.dump(data, file, indent=4, ensure_ascii=False)
 
         os.replace(tmp_path, DATA_FILE)
-        logging.debug('Saved %d entries', len(data))
+        logger.info('Saved %d entries', len(data))
 
     except (OSError, TypeError, ValueError) as e:
         if tmp_path is not None:
             tmp_path.unlink(missing_ok=True)
             
-        logging.exception("Failed to save entries: %s", e)
+        logger.exception("Failed to save entries: %s", e)
 
 
 def load_data() -> list | list[Entry]:
     if not DATA_FILE.exists():
-        logging.debug('No %s yet, starting with empty list', DATA_FILE)
+        logger.info('No %s yet, starting with empty list', DATA_FILE)
         return []
 
     try:
         with open(DATA_FILE, 'r', encoding='utf-8') as file:
             raw_data: list[dict[str, Any]] = json.load(file)
             entries: list[Entry] = [Entry.from_dict(entry) for entry in raw_data]
-            logging.debug('Loaded %d entries', len(entries))
+            logger.info('Loaded %d entries', len(entries))
             return entries
 
     except json.JSONDecodeError:
-        logging.exception("Warning: %s is not valid JSON. Load data starying empty.", DATA_FILE)
+        logger.exception("Warning: %s is not valid JSON. Load data starying empty.", DATA_FILE)
         return []
     except TypeError as e:
-        logging.exception("Warning: %s has invalid data (%s). Load data starying empty.", DATA_FILE, e)
+        logger.exception("Warning: %s has invalid data (%s). Load data starying empty.", DATA_FILE, e)
         return []
