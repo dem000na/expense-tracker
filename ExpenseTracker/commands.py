@@ -1,5 +1,5 @@
 from ExpenseTracker.models import Entry
-from ExpenseTracker.save_load_commands import save_data, load_data
+from ExpenseTracker.storage import save_data, load_data
 from collections import Counter
 
 

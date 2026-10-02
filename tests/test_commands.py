@@ -1,7 +1,7 @@
 import pytest
 import datetime
 from ExpenseTracker.models import Entry
-import ExpenseTracker.cli_commands as cli_commands
+import ExpenseTracker.commands as commands
 
 
 @pytest.fixture
@@ -20,19 +20,19 @@ def entries():
 def test_add_item_append_entries(monkeypatch):
     saved: list = []
 
-    monkeypatch.setattr(cli_commands, 'load_data', lambda: [])
-    monkeypatch.setattr(cli_commands, 'save_data', lambda e: saved.append(e))
+    monkeypatch.setattr(commands, 'load_data', lambda: [])
+    monkeypatch.setattr(commands, 'save_data', lambda e: saved.append(e))
 
     entry = Entry(amount=12.5, category='food', note='lunch')
-    cli_commands.add_item(entry)
+    commands.add_item(entry)
 
     assert saved == [[entry]]
 
 def test_show_list_filter_by_category(monkeypatch, capsys, entries):
 
-    monkeypatch.setattr(cli_commands, 'load_data', lambda: entries)
+    monkeypatch.setattr(commands, 'load_data', lambda: entries)
 
-    cli_commands.show_list(category='food', date=None)
+    commands.show_list(category='food', date=None)
 
     output = capsys.readouterr().out
     lines = output.splitlines()
@@ -43,9 +43,9 @@ def test_show_list_filter_by_category(monkeypatch, capsys, entries):
 
 def test_show_list_filter_by_date(monkeypatch, capsys, entries):
 
-    monkeypatch.setattr(cli_commands, 'load_data', lambda: entries)
+    monkeypatch.setattr(commands, 'load_data', lambda: entries)
 
-    cli_commands.show_list(category='', date=datetime.date(2026, 9, 15))
+    commands.show_list(category='', date=datetime.date(2026, 9, 15))
 
     output = capsys.readouterr().out
     lines = output.splitlines()
@@ -55,9 +55,9 @@ def test_show_list_filter_by_date(monkeypatch, capsys, entries):
 
 def test_show_month_report(monkeypatch, capsys, entries):
 
-    monkeypatch.setattr(cli_commands, 'load_data', lambda: entries)
+    monkeypatch.setattr(commands, 'load_data', lambda: entries)
 
-    cli_commands.show_month_report(month=None)
+    commands.show_month_report(month=None)
 
 
     lines = capsys.readouterr().out.splitlines()
