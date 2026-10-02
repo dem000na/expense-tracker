@@ -16,6 +16,7 @@ dist/
 
 # Personal expense data
 data/*.json
+logging/*.log
 
 # IDE / OS
 .idea/
