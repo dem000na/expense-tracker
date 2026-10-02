@@ -1,6 +1,6 @@
 from ExpenseTracker.models import Entry
 from ExpenseTracker.storage import save_data, load_data
-from collections import Counter
+from collections import defaultdict
 
 
 def add_item(entry: Entry) -> None:
@@ -33,10 +33,12 @@ def show_month_report(month):
             print("No added items")
             return
 
-    totals = Counter()
+    totals = defaultdict(float)
 
     for entry in entries:
-        totals[entry.to_dict()['category']] += entry.to_dict()['amount']
+        totals[entry.category] += entry.amount
+
+    print(f'Month: {month:%Y-%m}')
 
     for key, value in totals.items():
         print(f"{key}: €{value:.2f}")
