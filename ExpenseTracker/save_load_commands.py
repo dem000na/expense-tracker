@@ -3,7 +3,7 @@ import os
 import tempfile
 import logging
 from pathlib import Path
-from models import Entry
+from ExpenseTracker.models import Entry
 from typing import Any
 
 

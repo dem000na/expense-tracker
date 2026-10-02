@@ -2,8 +2,8 @@ import argparse
 import datetime
 import logging
 from pathlib import Path
-from models import Entry
-from cli_commands import add_item, show_list, show_month_report
+from ExpenseTracker.models import Entry
+from ExpenseTracker.cli_commands import add_item, show_list, show_month_report
 
 LOG_DIR: Path = Path(__file__).resolve().parent.parent / 'logging' / 'logs.log'
 
